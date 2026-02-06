@@ -2,6 +2,8 @@ package com.example.lab5_starter;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -86,8 +88,28 @@ public class MainActivity extends AppCompatActivity implements CityDialogFragmen
             }
         }));
 
+        // delete a city on long press -- set listener
+        cityListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                City city = cityArrayList.get(i);
+                removeCity(city);
+                return false;
+            }
+        });
+
 
     }
+
+    public void removeCity(City city) {
+
+        cityArrayList.remove(city);
+        cityArrayAdapter.notifyDataSetChanged();
+
+        DocumentReference docRef = citiesRef.document(city.getName());
+        docRef.delete();
+    }
+
 
     @Override
     public void updateCity(City city, String title, String year) {
